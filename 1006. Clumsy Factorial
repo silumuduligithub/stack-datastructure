@@ -1,0 +1,60 @@
+class Solution {
+    public Stack<Integer> reverseStack(Stack<Integer> st){
+        Stack<Integer> temp = new Stack<>();
+        while(st.size() > 0){
+            int cur = st.pop();
+            temp.push(cur);
+        }
+        return temp;
+    }
+    public int clumsy(int n) {
+        if(n == 1)return 1;
+        Stack<Integer> st1 = new Stack<>();
+        Stack<Integer> st2 = new Stack<>();
+        st1.push(n * (n - 1));
+        boolean flag  = false;
+        // first multiply
+        int temp = n - 1;
+        if(temp == 4)flag = true;
+        while(temp > 0){
+            temp -= 4;
+            if(temp > 0){
+                int cur = (temp * (temp + 1)) * -1;
+                st1.push(cur);
+            }
+            if(temp == 4){
+                flag = true;
+            }
+        }
+        st1 = reverseStack(st1);
+        //second division
+        temp = n - 2;
+        while(st1.size() > 0){
+            int cur = st1.pop();
+            if(temp > 0){
+                st2.push(cur / temp);
+            }else{
+                st2.push(cur);
+            }
+            temp -= 4;
+        }
+        st1 = reverseStack(st2);
+        // third addition
+        temp = n - 3;
+        while(st1.size() > 0){
+            int cur = st1.pop();
+            if(temp > 0){
+                st2.push(cur + temp);
+            }else{
+                st2.push(cur);
+            }
+
+            temp -= 4;
+        }
+        int ans = 0;
+        while(st2.size() > 0){
+            ans += st2.pop();
+        }
+        return flag == true ? ans -1 : ans;
+    }
+}
